@@ -222,6 +222,10 @@ elif [ "$WINE_BRANCH" = "proton" ]; then
 		git clone https://github.com/ValveSoftware/wine -b "${PROTON_BRANCH}"
 	fi
 
+	patch -d wine -Np1 < "${scriptdir}"/ntdll-process-params-image-key-missing.patch
+
+	patch -d wine -Np1 < "${scriptdir}"/denuvo.patch
+
  	patch -d wine -Np1 < "${scriptdir}"/fix-proton-compilation-and-version-output.patch
 
 	WINE_VERSION="$(cat wine/VERSION | tail -c +14)-$(git -C wine rev-parse --short HEAD)"
@@ -284,6 +288,8 @@ else
 			echo "Wine-Staging patches were not applied correctly!"
 			exit 1
 		fi
+
+		patch -d wine -Np1 < "${scriptdir}"/denuvo_staging.patch
 
 		cd "${BUILD_DIR}" || exit 1
 	fi
